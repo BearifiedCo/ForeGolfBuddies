@@ -82,17 +82,22 @@ export default function FriendsScreen({ navigation: _navigation }: FriendsScreen
     <View key={friend.id} className="bg-white mx-4 mb-3 rounded-lg shadow-sm border border-gray-100">
       <View className="p-4">
         <View className="flex-row items-center">
-          <View className="w-12 h-12 bg-green-600 rounded-full items-center justify-center mr-4">
+          <View className="w-12 h-12 bg-golf-700 rounded-full items-center justify-center mr-4">
             <Ionicons name="person" size={24} color="white" />
           </View>
           <View className="flex-1">
             <Text className="font-semibold text-gray-900 text-base">{friend.name}</Text>
             <Text className="text-gray-600 text-sm">{friend.location}</Text>
-            <Text className="text-green-600 text-sm">Handicap: {friend.handicap}</Text>
+            <Text className="text-golf-700 text-sm">Handicap: {friend.handicap}</Text>
           </View>
-          <Pressable className="p-2">
-            <Ionicons name="chatbubble-outline" size={20} color="#6b7280" />
-          </Pressable>
+          <View className="flex-row space-x-2">
+            <Pressable 
+              className="p-2 bg-golf-600 rounded-lg"
+              onPress={() => navigation.navigate('NewMessage')}
+            >
+              <Ionicons name="chatbubble-outline" size={20} color="white" />
+            </Pressable>
+          </View>
         </View>
       </View>
     </View>
@@ -117,7 +122,7 @@ export default function FriendsScreen({ navigation: _navigation }: FriendsScreen
           </View>
           <View className="flex-row mt-3 space-x-3">
             <Pressable
-              className="flex-1 bg-green-600 rounded-lg py-2 items-center"
+              className="flex-1 bg-golf-700 rounded-lg py-2 items-center"
               onPress={() => handleAcceptRequest(request)}
             >
               <Text className="text-white font-medium">Accept</Text>
@@ -146,12 +151,21 @@ export default function FriendsScreen({ navigation: _navigation }: FriendsScreen
             <Text className="text-gray-600 text-sm">{searchUser.location}</Text>
             <Text className="text-gray-600 text-sm">Handicap: {searchUser.handicap}</Text>
           </View>
-          <Pressable
-            className="bg-green-600 px-4 py-2 rounded-lg"
-            onPress={() => handleSendFriendRequest(searchUser)}
-          >
-            <Text className="text-white font-medium">Add Friend</Text>
-          </Pressable>
+          <View className="flex-row space-x-2">
+            <Pressable
+              className="bg-golf-600 px-3 py-2 rounded-lg"
+              onPress={() => navigation.navigate('NewMessage')}
+            >
+              <Ionicons name="chatbubble-outline" size={18} color="white" />
+            </Pressable>
+            
+            <Pressable
+              className="bg-golf-700 px-4 py-2 rounded-lg"
+              onPress={() => handleSendFriendRequest(searchUser)}
+            >
+              <Text className="text-white font-medium">Add Friend</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </View>
@@ -170,13 +184,13 @@ export default function FriendsScreen({ navigation: _navigation }: FriendsScreen
             <Pressable
               key={tab.key}
               className={`flex-1 py-3 items-center border-b-2 ${
-                activeTab === tab.key ? 'border-green-600' : 'border-transparent'
+                activeTab === tab.key ? 'border-golf-700' : 'border-transparent'
               }`}
               onPress={() => setActiveTab(tab.key as any)}
             >
               <View className="flex-row items-center">
                 <Text className={`font-medium ${
-                  activeTab === tab.key ? 'text-green-600' : 'text-gray-600'
+                  activeTab === tab.key ? 'text-golf-700' : 'text-gray-600'
                 }`}>
                   {tab.label}
                 </Text>
@@ -221,7 +235,7 @@ export default function FriendsScreen({ navigation: _navigation }: FriendsScreen
                     Start connecting with other golfers to build your network
                   </Text>
                   <Pressable
-                    className="bg-green-600 px-6 py-3 rounded-lg mt-4"
+                    className="bg-golf-700 px-6 py-3 rounded-lg mt-4"
                     onPress={() => setActiveTab('search')}
                   >
                     <Text className="text-white font-medium">Find Friends</Text>

@@ -1,11 +1,14 @@
+// Import polyfills for basic crypto/zlib compatibility
+import './src/utils/polyfills';
+
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AppNavigator from "./src/navigation/AppNavigator";
-import { useBookingStore } from "./src/state/bookingStore";
 import { useSocialStore } from "./src/state/socialStore";
-import { initializeMockData } from "./src/data/mockData";
+import { useAuthStore } from "./src/state/authStore";
+import { rewardsService } from "./src/services/rewardsService";
 
 /*
 IMPORTANT NOTICE: DO NOT REMOVE
@@ -29,26 +32,24 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 */
 
 export default function App() {
-  const { setCourses, bookings, addBooking } = useBookingStore();
   const { posts, addPost } = useSocialStore();
+  const { user, isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    // Initialize mock data on app start
-    const mockData = initializeMockData();
-    
-    // Set courses
-    setCourses(mockData.courses);
-    
-    // Add mock bookings if none exist
-    if (bookings.length === 0) {
-      mockData.bookings.forEach(booking => addBooking(booking));
-    }
-    
     // Add mock posts if none exist
     if (posts.length === 0) {
-      mockData.posts.forEach(post => addPost(post));
+      // Import mock posts directly since we simplified the data structure
+      const { mockPosts } = require('./src/data/mockData');
+      mockPosts.forEach((post: any) => addPost(post));
     }
-  }, []);
+  }, [posts.length, addPost]);
+
+  // Initialize rewards when user logs in
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      rewardsService.initializeUser(user.id);
+    }
+  }, [isAuthenticated, user]);
 
   return (
     <GestureHandlerRootView className="flex-1">

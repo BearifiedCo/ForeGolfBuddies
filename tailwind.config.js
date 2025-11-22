@@ -11,11 +11,22 @@ module.exports = {
   theme: {
     // NOTE to AI: You can extend the theme with custom colors or styles here.
     extend: {
-      // For example, you can add a primary or secondary color here.
-      // colors: {
-      //   primary: "#INSERT_VALID_HEX_CODE",
-      //   secondary: "#INSERT_VALID_HEX_CODE",
-      // },
+      // Custom blue color palette based on #10288F
+      colors: {
+        golf: {
+          50: '#f0f4ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe',
+          300: '#a5b4fc',
+          400: '#818cf8',
+          500: '#6366f1',
+          600: '#4f46e5',
+          700: '#10288F',
+          800: '#0d1f6b',
+          900: '#0b1a5a',
+          950: '#070f3d',
+        },
+      },
       fontSize: {
         xs: "10px",
         sm: "12px",

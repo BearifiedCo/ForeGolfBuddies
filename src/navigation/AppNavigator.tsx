@@ -7,22 +7,42 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../state/authStore';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import TwoFactorScreen from '../screens/TwoFactorScreen';
+import PasswordResetScreen from '../screens/PasswordResetScreen';
 import HomeFeedScreen from '../screens/HomeFeedScreen';
-import CreateBookingScreen from '../screens/CreateBookingScreen';
-import BookingDetailsScreen from '../screens/BookingDetailsScreen';
 import FriendsScreen from '../screens/FriendsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import ProfileSearchScreen from '../screens/ProfileSearchScreen';
+import MessagesScreen from '../screens/MessagesScreen';
+import ChatScreen from '../screens/ChatScreen';
+import NewMessageScreen from '../screens/NewMessageScreen';
+import CreateGroupChatScreen from '../screens/CreateGroupChatScreen';
+import AchievementsScreen from '../screens/AchievementsScreen';
+import ScorecardScreen from '../screens/ScorecardScreen';
+import StartRoundScreen from '../screens/StartRoundScreen';
 
 export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
+  TwoFactor: {
+    userId: string;
+    method: 'email' | 'phone';
+    userEmail: string;
+    userPhone?: string;
+  };
+  PasswordReset: undefined;
   Main: undefined;
-  BookingDetails: { bookingId: string };
+  ProfileSearch: undefined;
+  Profile: { userId?: string };
+  Achievements: undefined;
+  Scorecard: undefined;
+  StartRound: undefined;
 };
 
 export type MainTabParamList = {
   Home: undefined;
-  CreateBooking: undefined;
+  Scorecard: undefined;
+  Messages: undefined;
   Friends: undefined;
   Profile: undefined;
 };
@@ -39,8 +59,10 @@ function MainTabs() {
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'CreateBooking') {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
+          } else if (route.name === 'Scorecard') {
+            iconName = focused ? 'golf' : 'golf-outline';
+          } else if (route.name === 'Messages') {
+            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           } else if (route.name === 'Friends') {
             iconName = focused ? 'people' : 'people-outline';
           } else if (route.name === 'Profile') {
@@ -51,14 +73,14 @@ function MainTabs() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#16a34a',
+        tabBarActiveTintColor: '#10288F',
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
           backgroundColor: 'white',
           borderTopColor: '#e5e7eb',
         },
         headerStyle: {
-          backgroundColor: '#16a34a',
+          backgroundColor: '#10288F',
         },
         headerTintColor: 'white',
         headerTitleStyle: {
@@ -69,12 +91,17 @@ function MainTabs() {
       <Tab.Screen 
         name="Home" 
         component={HomeFeedScreen}
-        options={{ title: 'Golf Social' }}
+        options={{ title: 'ForeBuddies' }}
       />
       <Tab.Screen 
-        name="CreateBooking" 
-        component={CreateBookingScreen}
-        options={{ title: 'Book Tee Time' }}
+        name="Scorecard" 
+        component={ScorecardScreen}
+        options={{ title: 'Scorecard' }}
+      />
+      <Tab.Screen 
+        name="Messages" 
+        component={MessagesScreen}
+        options={{ title: 'Messages' }}
       />
       <Tab.Screen 
         name="Friends" 
@@ -100,18 +127,59 @@ export default function AppNavigator() {
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="TwoFactor" component={TwoFactorScreen} />
+            <Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
           </>
         ) : (
           <>
             <Stack.Screen name="Main" component={MainTabs} />
             <Stack.Screen 
-              name="BookingDetails" 
-              component={BookingDetailsScreen}
+              name="ProfileSearch" 
+              component={ProfileSearchScreen}
               options={{ 
-                headerShown: true,
-                title: 'Booking Details',
-                headerStyle: { backgroundColor: '#16a34a' },
-                headerTintColor: 'white',
+                headerShown: false
+              }}
+            />
+            <Stack.Screen 
+              name="Profile" 
+              component={ProfileScreen}
+              options={{ 
+                headerShown: false
+              }}
+            />
+            <Stack.Screen 
+              name="Chat" 
+              component={ChatScreen}
+              options={{ 
+                headerShown: false
+              }}
+            />
+            <Stack.Screen 
+              name="NewMessage" 
+              component={NewMessageScreen}
+              options={{ 
+                headerShown: false
+              }}
+            />
+            <Stack.Screen 
+              name="CreateGroupChat" 
+              component={CreateGroupChatScreen}
+              options={{ 
+                headerShown: false
+              }}
+            />
+            <Stack.Screen 
+              name="Achievements" 
+              component={AchievementsScreen}
+              options={{ 
+                headerShown: false
+              }}
+            />
+            <Stack.Screen 
+              name="StartRound" 
+              component={StartRoundScreen}
+              options={{ 
+                headerShown: false
               }}
             />
           </>
