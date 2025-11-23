@@ -17,7 +17,7 @@ export interface UserTier {
 }
 
 export interface TierBenefit {
-  type: 'profile_customization' | 'exclusive_badges' | 'priority_support' | 'beta_features' | 'custom_avatar_frames';
+  type: 'profile_customization' | 'exclusive_badges' | 'priority_support' | 'beta_features' | 'custom_avatar_frames' | 'special_privilege';
   description: string;
   iconName: string;
 }

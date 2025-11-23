@@ -36,3 +36,12 @@ yarn-error.*
 # iOS & Android
 ios/
 android/
+
+# Environment
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+!*.env.example
