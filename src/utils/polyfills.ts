@@ -5,16 +5,17 @@ import 'react-native-polyfill-globals/auto';
 import 'react-native-get-random-values';
 
 // Basic crypto polyfill
-if (typeof global.crypto === 'undefined') {
-  global.crypto = {
-    getRandomValues: (array) => {
+if (typeof (globalThis as any).crypto === 'undefined') {
+  (globalThis as any).crypto = {
+    getRandomValues: (array: Uint8Array | Int8Array | Uint16Array | Int16Array | Uint32Array | Int32Array) => {
+      if (!array) return array;
       for (let i = 0; i < array.length; i++) {
         array[i] = Math.floor(Math.random() * 256);
       }
       return array;
     },
     subtle: {
-      generateKey: () => Promise.resolve({}),
+      generateKey: () => Promise.resolve({ publicKey: {}, privateKey: {} } as unknown as CryptoKeyPair),
       sign: () => Promise.resolve(new ArrayBuffer(0)),
       verify: () => Promise.resolve(true),
       encrypt: () => Promise.resolve(new ArrayBuffer(0)),
@@ -24,9 +25,9 @@ if (typeof global.crypto === 'undefined') {
 }
 
 // Basic zlib polyfill
-if (typeof global.zlib === 'undefined') {
-  global.zlib = {
-    inflateRaw: (buffer, options, callback) => {
+if (typeof (globalThis as any).zlib === 'undefined') {
+  (globalThis as any).zlib = {
+    inflateRaw: (buffer: any, options: any, callback: any) => {
       if (typeof options === 'function') {
         callback = options;
       }
@@ -36,7 +37,7 @@ if (typeof global.zlib === 'undefined') {
         return Promise.resolve(buffer);
       }
     },
-    deflateRaw: (buffer, options, callback) => {
+    deflateRaw: (buffer: any, options: any, callback: any) => {
       if (typeof options === 'function') {
         callback = options;
       }
@@ -48,13 +49,5 @@ if (typeof global.zlib === 'undefined') {
     }
   };
 }
-
-// Jose package has been removed to resolve crypto/zlib issues
-
-// Basic polyfills are still available for other packages that might need them
-
-
-
-
 
 console.log('🔧 Basic crypto/zlib polyfills loaded');
