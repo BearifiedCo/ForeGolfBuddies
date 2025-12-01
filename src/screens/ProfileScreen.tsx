@@ -404,7 +404,7 @@ export default function ProfileScreen({ navigation, route }: ProfileScreenProps)
               </TouchableOpacity>
               
               <TouchableOpacity
-                onPress={() => setShowSettings(true)}
+                onPress={() => navigation.navigate('Settings')}
                 className="p-2"
               >
                 <Ionicons name="settings-outline" size={24} color="#374151" />

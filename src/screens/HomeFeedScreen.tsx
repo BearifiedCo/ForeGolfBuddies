@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, ScrollView, Pressable, RefreshControl, Image, TouchableOpacity, Alert, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useSocialStore } from '../state/socialStore';
 import { useAuthStore } from '../state/authStore';
+import { useModerationStore } from '../state/moderationStore';
 import { Post, User, Comment } from '../types/golf';
 import CreatePostModal from '../components/CreatePostModal';
 import CommentSection from '../components/CommentSection';
 import WeatherWidget from '../components/WeatherWidget';
 import AchievementPost from '../components/AchievementPost';
 import RewardShareModal from '../components/RewardShareModal';
+import PostOptionsMenu from '../components/PostOptionsMenu';
 import { getFullGreeting } from '../utils/greetings';
 import { useRewardsStore } from '../state/rewardsStore';
 import { ACHIEVEMENT_TEMPLATES } from '../types/rewards';
@@ -22,12 +24,22 @@ export default function HomeFeedScreen({ navigation }: HomeFeedScreenProps) {
   const { posts, likePost, addPost, addComment, addReply, likeComment, likeReply, deletePost, deleteComment } = useSocialStore();
   const { user } = useAuthStore();
   const { userRewards } = useRewardsStore();
+  const { blockedUsers } = useModerationStore();
   const [refreshing, setRefreshing] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showComments, setShowComments] = useState<string | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [sharePost, setSharePost] = useState<Post | null>(null);
   const [currentGreeting, setCurrentGreeting] = useState(getFullGreeting(user?.name));
+
+  // Filter out posts from blocked users
+  const filteredPosts = useMemo(() => {
+    if (!user) return posts;
+    const blockedUserIds = blockedUsers
+      .filter(block => block.blockerId === user.id)
+      .map(block => block.blockedUserId);
+    return posts.filter(post => !blockedUserIds.includes(post.userId));
+  }, [posts, blockedUsers, user]);
 
   // Update greeting when user changes or time changes
   React.useEffect(() => {
@@ -155,22 +167,33 @@ export default function HomeFeedScreen({ navigation }: HomeFeedScreenProps) {
               <Text className="text-sm text-gray-500">{formatTimeAgo(post.createdAt)}</Text>
             </View>
           </View>
-          
-          {/* Post Type Indicator */}
-          {post.type !== 'general' && (
-            <View className={`px-2 py-1 rounded-full ${
-              post.type === 'photo' ? 'bg-blue-100' : 
-              post.type === 'score' ? 'bg-green-100' : 'bg-gray-100'
-            }`}>
-              <Text className={`text-xs font-medium ${
-                post.type === 'photo' ? 'text-blue-700' : 
-                post.type === 'score' ? 'text-green-700' : 'text-gray-700'
+
+          <View className="flex-row items-center">
+            {/* Post Type Indicator */}
+            {post.type !== 'general' && (
+              <View className={`px-2 py-1 rounded-full mr-2 ${
+                post.type === 'photo' ? 'bg-blue-100' :
+                post.type === 'score' ? 'bg-green-100' : 'bg-gray-100'
               }`}>
-                {post.type === 'photo' ? 'Photo' : 
-                 post.type === 'score' ? 'Score' : post.type}
-              </Text>
-            </View>
-          )}
+                <Text className={`text-xs font-medium ${
+                  post.type === 'photo' ? 'text-blue-700' :
+                  post.type === 'score' ? 'text-green-700' : 'text-gray-700'
+                }`}>
+                  {post.type === 'photo' ? 'Photo' :
+                   post.type === 'score' ? 'Score' : post.type}
+                </Text>
+              </View>
+            )}
+
+            {/* Post Options Menu (Report/Block/Delete) */}
+            <PostOptionsMenu
+              postId={post.id}
+              postOwnerId={post.userId}
+              postOwnerName={post.userName}
+              isOwnPost={post.userId === user?.id}
+              onDelete={() => deletePost(post.id)}
+            />
+          </View>
         </View>
 
         {/* Score Data */}
@@ -228,47 +251,29 @@ export default function HomeFeedScreen({ navigation }: HomeFeedScreenProps) {
         
         {/* Interaction Bar */}
         <View className="flex-row items-center justify-between pt-3 border-t border-gray-100">
-          <TouchableOpacity 
+          <TouchableOpacity
             className="flex-row items-center"
             onPress={() => handleLikePost(post.id)}
           >
-            <Ionicons 
-              name={post.likedBy?.includes(user?.id || '') ? "heart" : "heart-outline"} 
-              size={20} 
-              color={post.likedBy?.includes(user?.id || '') ? "#ef4444" : "#10288F"} 
+            <Ionicons
+              name={post.likedBy?.includes(user?.id || '') ? "heart" : "heart-outline"}
+              size={20}
+              color={post.likedBy?.includes(user?.id || '') ? "#ef4444" : "#10288F"}
             />
             <Text className="ml-1 text-golf-700">{post.likes}</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             className="flex-row items-center"
             onPress={() => setShowComments(showComments === post.id ? null : post.id)}
           >
             <Ionicons name="chatbubble-outline" size={20} color="#6b7280" />
             <Text className="ml-1 text-gray-500">{post.comments?.length || 0}</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity className="flex-row items-center">
             <Ionicons name="share-outline" size={20} color="#6b7280" />
           </TouchableOpacity>
-
-          {/* Delete button for own posts */}
-          {post.userId === user?.id && (
-            <TouchableOpacity 
-              onPress={() => {
-                Alert.alert(
-                  'Delete Post',
-                  'Are you sure you want to delete this post?',
-                  [
-                    { text: 'Cancel', style: 'cancel' },
-                    { text: 'Delete', onPress: () => deletePost(post.id), style: 'destructive' }
-                  ]
-                );
-              }}
-            >
-              <Ionicons name="trash-outline" size={20} color="#ef4444" />
-            </TouchableOpacity>
-          )}
         </View>
       </View>
 
@@ -342,8 +347,8 @@ export default function HomeFeedScreen({ navigation }: HomeFeedScreenProps) {
               </TouchableOpacity>
             </View>
 
-            {posts.length > 0 ? (
-              posts.map(renderPost)
+            {filteredPosts.length > 0 ? (
+              filteredPosts.map(renderPost)
             ) : (
               <View className="bg-white mx-4 rounded-lg p-6 items-center">
                 <Ionicons name="chatbubbles-outline" size={48} color="#d1d5db" />

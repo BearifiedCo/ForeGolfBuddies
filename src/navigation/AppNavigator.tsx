@@ -20,6 +20,10 @@ import CreateGroupChatScreen from '../screens/CreateGroupChatScreen';
 import AchievementsScreen from '../screens/AchievementsScreen';
 import ScorecardScreen from '../screens/ScorecardScreen';
 import StartRoundScreen from '../screens/StartRoundScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import BlockedUsersScreen from '../screens/BlockedUsersScreen';
+import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
+import RewardsScreen from '../screens/RewardsScreen';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -37,6 +41,10 @@ export type RootStackParamList = {
   Achievements: undefined;
   Scorecard: undefined;
   StartRound: undefined;
+  Settings: undefined;
+  BlockedUsers: undefined;
+  PrivacyPolicy: undefined;
+  Rewards: undefined;
 };
 
 export type MainTabParamList = {
@@ -175,10 +183,38 @@ export default function AppNavigator() {
                 headerShown: false
               }}
             />
-            <Stack.Screen 
-              name="StartRound" 
+            <Stack.Screen
+              name="StartRound"
               component={StartRoundScreen}
-              options={{ 
+              options={{
+                headerShown: false
+              }}
+            />
+            <Stack.Screen
+              name="Settings"
+              component={SettingsScreen}
+              options={{
+                headerShown: false
+              }}
+            />
+            <Stack.Screen
+              name="BlockedUsers"
+              component={BlockedUsersScreen}
+              options={{
+                headerShown: false
+              }}
+            />
+            <Stack.Screen
+              name="PrivacyPolicy"
+              component={PrivacyPolicyScreen}
+              options={{
+                headerShown: false
+              }}
+            />
+            <Stack.Screen
+              name="Rewards"
+              component={RewardsScreen}
+              options={{
                 headerShown: false
               }}
             />

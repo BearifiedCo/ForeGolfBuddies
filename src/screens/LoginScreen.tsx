@@ -21,8 +21,8 @@ interface LoginScreenProps {
 }
 
 export default function LoginScreen({ navigation }: LoginScreenProps) {
-  const [email, setEmail] = useState('test@golf.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login, setPendingSession, requireTwoFactor } = useAuthStore();
 
@@ -121,21 +121,13 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
             </View>
 
             {/* Forgot Password Link */}
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={navigateToPasswordReset}
               className="self-end"
               disabled={isLoading}
             >
               <Text className="text-golf-700 font-medium text-sm">Forgot Password?</Text>
             </TouchableOpacity>
-
-            {/* Demo Credentials */}
-            <View className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
-              <Text className="text-blue-800 font-medium text-sm mb-1">Demo Credentials:</Text>
-              <Text className="text-blue-700 text-xs">Email: test@golf.com</Text>
-              <Text className="text-blue-700 text-xs">Password: password123</Text>
-              <Text className="text-blue-600 text-xs mt-1">(2FA temporarily disabled for development)</Text>
-            </View>
 
             {/* Login Button */}
             <TouchableOpacity

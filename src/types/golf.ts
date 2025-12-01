@@ -282,3 +282,47 @@ export interface MessageNotification {
   type: 'new_message' | 'message_read' | 'typing_indicator';
   createdAt: Date;
 }
+
+// Content Moderation Types
+export type ReportReason =
+  | 'spam'
+  | 'harassment'
+  | 'inappropriate_content'
+  | 'hate_speech'
+  | 'violence'
+  | 'misinformation'
+  | 'impersonation'
+  | 'other';
+
+export type ReportContentType = 'post' | 'comment' | 'reply' | 'message' | 'user';
+
+export interface ContentReport {
+  id: string;
+  reporterId: string;
+  reporterName: string;
+  contentType: ReportContentType;
+  contentId: string;
+  contentOwnerId: string;
+  reason: ReportReason;
+  description?: string;
+  status: 'pending' | 'reviewed' | 'resolved' | 'dismissed';
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface BlockedUser {
+  id: string;
+  blockerId: string;
+  blockedUserId: string;
+  blockedUserName: string;
+  reason?: string;
+  createdAt: Date;
+}
+
+// App Configuration
+export interface AppConfig {
+  supportEmail: string;
+  privacyPolicyUrl: string;
+  termsOfServiceUrl: string;
+  appVersion: string;
+}
